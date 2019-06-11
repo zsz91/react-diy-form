@@ -13,7 +13,7 @@ export default class CenterContent extends Component {
   }
 
   render() {
-    const { setting, formConfig } = this.props;
+    const { setting, formConfig, nowField } = this.props;
     if(!setting.length){
       return <div className={styles.noItemDiv}>
         <div className={styles.noItem}>
@@ -23,13 +23,30 @@ export default class CenterContent extends Component {
         </span>
       </div>
     }
+
+    let value = {};
+    for(let i = 0 ; i<setting.length; i++){
+      let item = setting[i];
+      if(typeof item.key === 'undefined'){
+        item.key = i + item.type + item.name;
+      }
+      value[item.key] = item.detailProps.defaultValue;
+    }
+
     return <div className={styles.center}>
       <FormDiy
         readOnly
         deleteField={this.props.deleteField}
         chooseField={this.props.chooseField}
         config={setting}
-        value={{}}
+        nowField={nowField}
+        value={value}
+        nameSpan={
+          {
+            big: 5,
+            small: 7,
+          }
+        }
         fileSpan={{big:formConfig.fileSpan, small: formConfig.fileSpan}}
       />
     </div>;

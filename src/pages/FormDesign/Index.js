@@ -15,7 +15,7 @@ export default class Index extends Component{
       nowField: null, // 当前操作的字段 是字段数组中的一个
       height: '500px',
       formConfig: {  // 表单属性.
-        fileSpan: 2,
+        fileSpan: 1, // 单列还是双列 只能 是 1 或者 2
       },
     }
   }
@@ -30,29 +30,46 @@ export default class Index extends Component{
     })
   };
 
-  deleteField = (index) => {
+  deleteField = (index) => {  // 删除
     const { setting } = this.state;
-    const nowField = null;
     setting.splice(index,1);
     this.changeState('setting', setting);
+    this.changeState('nowField', null);
+  };
+
+  chooseField = (index) => { // 选择
+    const { setting } = this.state;
+    const nowField = {
+      ...setting[index],
+      index,
+    };
     this.changeState('nowField', nowField);
   };
 
-  chooseField = (index) => {
-    const { setting, nowField } = this.state;
-    this.changeState('nowField', setting[index]);
+  changeNowField = (newValue) => { // 修改
+    this.changeState('nowField', newValue);
+    const { setting } = this.state;
+    setting[newValue.index] = newValue;
+    this.changeState('setting', setting);
   };
 
-  addField = (type) => {
+  changeFormConfig = ( key, value ) => {
+    const { formConfig } = this.state;
+    formConfig[key] = value;
+    this.changeState('formConfig',formConfig);
+  };
+
+  addField = (type) => { // 新增
     const { setting } = this.state;
     const nowField = deepCopy(DefautProps[type]);
     setting.push(nowField);
+    nowField.index = setting.length -1 ;
     this.changeState('setting', setting);
     this.changeState('nowField', nowField);
   };
 
   render(){
-    const { height } =this.state;
+    const { height } = this.state;
     return <Row
       className={styles.total}
       style={{height}}>
@@ -81,7 +98,10 @@ export default class Index extends Component{
         xl={6}
         className={styles.height100}
       >
-        <RightContent {...this.state} />
+        <RightContent
+          {...this.state}
+          changeFormConfig={this.changeFormConfig}
+          changeNowField={this.changeNowField}/>
       </Col>
     </Row>;
   }

@@ -33,14 +33,25 @@ const checkClick = (e) => {
   console.log(e);
 };
 
-const ColDom = ({ children, filedSpan,onClick }) => {
+const ColDom = ({ children, filedSpan,onClick, giveBorder }) => {
   const bigSpan = Math.ceil(24 / filedSpan.big);
   const smallSpan = Math.ceil(24 / filedSpan.small);
+  const styleThis = {
+    ...countSpecialField(filedSpan.big),
+    boxSizing: 'border-box',
+    padding: '15px 10px 0px 10px',
+  };
+  if(giveBorder){
+    styleThis.border =  '1px solid #0DB3A6';
+  }else{
+    styleThis.border =  '1px solid transparent';
+  }
+
   return (
     <Col
       xl={smallSpan}
       xxl={bigSpan}
-      style={countSpecialField(filedSpan.big)}
+      style={styleThis}
       onClick={onClick}
     >
       {children}
@@ -49,7 +60,7 @@ const ColDom = ({ children, filedSpan,onClick }) => {
     ;
 };
 
-const FormItemDom = ({ info, children, nameSpan, onClick }) => {
+const FormItemDom = ({ info, children, nameSpan }) => {
   return <FormItem
     label={info.name}
     required={info.required || false}
@@ -159,7 +170,7 @@ export default class FormArray extends Component {
   };
 
   domAssembly = () => {
-    const { changeValue, value, config, fileSpan, nameSpan } = this.props;
+    const { changeValue, value, config, fileSpan, nameSpan, nowField } = this.props;
     return config.map((info, i) => {
       let fieldDom = null;
       const defaultProps = this.defaultPropsCount(info, value);
@@ -362,10 +373,12 @@ export default class FormArray extends Component {
         <ColDom
           filedSpan={info.fileSpan || fileSpan}
           key={info.type + i}
+          giveBorder={nowField && nowField.index === i}
           onClick={()=>{this.props.chooseField(i)}}
         >
           <FormItemDom
             info={info}
+
             nameSpan={info.nameSpan || nameSpan}>
             <Badge
               count={
