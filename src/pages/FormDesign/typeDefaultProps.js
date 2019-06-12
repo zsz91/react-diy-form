@@ -50,18 +50,17 @@ const props = {
     name: '单选按钮组',
     required: false, // 是否必填,
     disabled: false, // 是否可编辑
-    showTime: false, // 类型 日期false => YYYY-MM-DD 时间true => YYYY-MM-DD HH:mm:ss
     options: [
       {
-        key: 'key0',
+        key: '0',
         name: '选项1',
       },
       {
-        key: 'key1',
+        key: '1',
         name: '选项2',
       },
       {
-        key: 'key2',
+        key: '2',
         name: '选项3',
       }
     ], // 选项
@@ -69,7 +68,57 @@ const props = {
       describe: '', // 描述信息
       defaultValue: '', // 默认值
     },
+  },
+  select:{
+    type: 'select',
+    name: '下拉框',
+    required: false, // 是否必填,
+    disabled: false, // 是否可编辑
+    options: [
+      {
+        key: '0',
+        name: '选项1',
+      },
+      {
+        key: '1',
+        name: '选项2',
+      },
+      {
+        key: '2',
+        name: '选项3',
+      }
+    ], // 选项
+    detailProps:{
+      describe: '', // 描述信息
+      defaultValue: '', // 默认值
+    },
+  },
+  checkBoxMutiple:{
+    type: 'checkBoxMutiple',
+    name: '复选框组',
+    required: false, // 是否必填,
+    disabled: false, // 是否可编辑
+    options: [
+      { label: '选项1', value: '1' },
+      { label: '选项2', value: '2' },
+      { label: '选项3', value: '3' },
+    ],
+    detailProps:{
+      describe: '', // 描述信息
+      defaultValue: [], // 默认值
+    },
+  },
+  buttonUpload:{
+    type: 'buttonUpload',
+    name: '附件',
+    buttonName: '选择文件',
+    buttonClassName: 'defaultBlue',
+    detailProps:{
+      describe: '', // 描述信息
+      defaultValue: [], // 默认值
+    },
   }
+
 
 };
 

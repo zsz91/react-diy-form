@@ -5,8 +5,8 @@ import {
 } from 'antd';
 import React, { Component, Fragment } from 'react';
 import styles from './FormDiy.less';
-import PropTypes from 'prop-types';
 import moment from 'moment';
+import ButtonUploadFormDesign from './ButtonUploadFormDesign';
 
 const RadioGroup = Radio.Group;
 const Option = Select.Option;
@@ -28,12 +28,7 @@ const countSpecialField = (filedSpanBig, nameSpanBig) => {
   return style;
 };
 
-
-const checkClick = (e) => {
-  console.log(e);
-};
-
-const ColDom = ({ children, filedSpan,onClick, giveBorder }) => {
+const ColDom = ({ children, filedSpan, onClick, giveBorder }) => {
   const bigSpan = Math.ceil(24 / filedSpan.big);
   const smallSpan = Math.ceil(24 / filedSpan.small);
   const styleThis = {
@@ -41,10 +36,10 @@ const ColDom = ({ children, filedSpan,onClick, giveBorder }) => {
     boxSizing: 'border-box',
     padding: '15px 10px 0px 10px',
   };
-  if(giveBorder){
-    styleThis.border =  '1px solid #0DB3A6';
-  }else{
-    styleThis.border =  '1px solid transparent';
+  if (giveBorder) {
+    styleThis.border = '1px solid #0DB3A6';
+  } else {
+    styleThis.border = '1px solid transparent';
   }
 
   return (
@@ -161,7 +156,7 @@ export default class FormArray extends Component {
   };
 
   deleteItem = (e, index) => {
-    if(e && e.preventDefault) {
+    if (e && e.preventDefault) {
       e.stopPropagation();
       e.preventDefault();
     }
@@ -363,37 +358,48 @@ export default class FormArray extends Component {
                                  {...info.props}
                                  onChange={(v) => changeValue(v, info.key)}/>;
           break;
+        case 'buttonUpload':
+          fieldDom = <ButtonUploadFormDesign onChange={(url) => {
+            changeValue(url, info.key);
+          }}
+                                   {...info}
+                                   {...defaultProps}
+          />;
+          break;
         default:
           fieldDom = null;
           break;
-
       }
-      const { chooseField } = this.props;
       return (
         <ColDom
           filedSpan={info.fileSpan || fileSpan}
           key={info.type + i}
           giveBorder={nowField && nowField.index === i}
-          onClick={()=>{this.props.chooseField(i)}}
+          onClick={() => {
+            this.props.chooseField(i);
+          }}
         >
           <FormItemDom
             info={info}
-
             nameSpan={info.nameSpan || nameSpan}>
-            <Badge
-              count={
-                <Icon
-                  type="close-square"
-                  // theme={'filled'}
-                  className={styles.closeIcon}
-                  onClick={(e) => {
-                    this.deleteItem(e, i);
-                  }}
-                />
-              }
-            >
-              {fieldDom}
-            </Badge>
+            {
+              nowField && nowField.index === i ?
+                <Badge
+                  count={
+                    <Icon
+                      type="close-square"
+                      // theme={'filled'}
+                      className={styles.closeIcon}
+                      onClick={(e) => {
+                        this.deleteItem(e, i);
+                      }}
+                    />
+                  }
+                >
+                  {fieldDom}
+                </Badge> : fieldDom
+            }
+
           </FormItemDom>
         </ColDom>
       );
@@ -410,104 +416,4 @@ export default class FormArray extends Component {
     );
   }
 }
-/**
- * 最主要的 props 就是config.
- * config: 表单填写的每一个字段,根据type的不同渲染不同的组件,
- * 包含 [inputNumber(数字input),input,
- *      selectMultiple(多选下拉),select(单选下拉)
- *      checkBox(单选checkbox),
- *      checkBoxMutiple (多选checkbox)
- *      datePicker日期选择  value 传入 时间戳格式 等等
- *
- * 具体请查看下面的demo
- *
- * changeValue: 表单的值改变后的回调
- * value : 表单的值应该是一个对象state {name:'',phone:''....}
- * fileSpan : { big:5, small:4}
- *         small: 设置1366*768的屏幕 每一行显示几个字段  如 只显示3个 则 = 3
- *         big: 设置1920*1080的屏幕  每一行显示几个字段 同上
- * nameSpan { big:5, small:4}   同上设置 一个字段的 字段名和填写的值所占的比例
- * */
 
-
-/**
- * 2019年3月7日
- * 钟是志
- * 增加对 时间段rangePicker选择的支持 具体使用见下面的 demo
- * */
-FormArray.propTypes = {
-  config: PropTypes.array,
-  readOnly: PropTypes.bool,
-  disabled: PropTypes.bool,
-  changeValue: PropTypes.func,
-  value: PropTypes.object,
-  fileSpan: PropTypes.object,
-  nameSpan: PropTypes.object,
-  style: PropTypes.object,
-};
-FormArray.defaultProps = {
-  config: [
-    {
-      name: '数字选择',
-      type: 'inputNumber',
-      placeholder: '',
-      key: 'scoreRank',
-    },
-    {
-      name: '文本框',
-      type: 'input',
-      placeholder: '',
-      key: 'scoreRank2',
-    },
-    {
-      key: 'startDate',
-      endKey: 'endDate',
-      name: '时间段选择',
-      type: 'rangePicker',
-      format: 'YYYY-MM-DD',
-      placeholder: ['开始时间', '结束时间'],
-      required: true,
-    },
-    {
-      name: '日期选择',
-      type: 'datePicker',
-      placeholder: '',
-      key: 'scoreRank5',
-    },
-    {
-      name: '下拉框选择',
-      type: 'select',
-      placeholder: '',
-      key: 'scoreRank6',
-    }, {
-      name: '下拉框多选',
-      type: 'selectMultiple',
-      placeholder: '',
-      key: 'scoreRank7',
-    }, {
-      key: 'studentType',
-      name: 'checkBox多选',
-      type: 'checkBoxMutiple',
-      options: [
-        { label: '本科', value: '本科' },
-        { label: '专科', value: '专科' },
-        { label: '研究生', value: '研究生' },
-      ],
-      required: true,
-    },
-
-  ],
-  changeValue: (value, key) => {
-  },
-  value: {},
-  fileSpan: {
-    big: 5,
-    small: 4,
-  },
-  nameSpan: {
-    big: 10,
-    small: 12,
-  },
-  disabled: false,
-  style: {},
-};

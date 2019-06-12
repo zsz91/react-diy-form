@@ -3,7 +3,9 @@ import styles from './right.less';
 import {
   Format, DefaultValue, IsRequired, IsEditable,
   EditName, EditDescribe, DefaultValueNumber, IsRequiredNumber,
-  DefaultValueDatePicker, DatePickerType, RadioGroupOpitionEdit } from './Basic';
+  DefaultValueDatePicker, DatePickerType, RadioGroupOpitionEdit,
+  CheckboxGroupOpitionEdit,
+} from './Basic';
 
 export default class FieldProps extends Component {
   constructor(props) {
@@ -121,6 +123,44 @@ export default class FieldProps extends Component {
               changeValue={this.changeValue}
             />
           </Fragment>);
+      case 'select':
+        return (
+          <Fragment>
+            <RadioGroupOpitionEdit
+              options={nowField.options}
+              defaultValue={nowField.detailProps.defaultValue}
+              changeDetailProps={this.changeDetailProps}
+              changeValue={this.changeValue}
+            />
+            <IsRequired
+              value={nowField.required}
+              changeValue={this.changeValue}
+            />
+            <IsEditable
+              value={!nowField.disabled}
+              changeValue={this.changeValue}
+            />
+          </Fragment>);
+      case 'checkBoxMutiple':
+        return (
+          <Fragment>
+            <CheckboxGroupOpitionEdit
+              options={nowField.options}
+              defaultValue={nowField.detailProps.defaultValue}
+              changeDetailProps={this.changeDetailProps}
+              changeValue={this.changeValue}
+            />
+            <IsRequired
+              value={nowField.required}
+              changeValue={this.changeValue}
+            />
+            <IsEditable
+              value={!nowField.disabled}
+              changeValue={this.changeValue}
+            />
+          </Fragment>);
+      case 'buttonUpload':
+        return null;
       default:
         break;
     }
@@ -138,10 +178,10 @@ export default class FieldProps extends Component {
           value={nowField.name}
           changeValue={this.changeValue}
           />
-        <EditDescribe
-          value={nowField.detailProps.describe}
-          changeDetailProps={this.changeDetailProps}
-        />
+        {/*<EditDescribe*/}
+          {/*value={nowField.detailProps.describe}*/}
+          {/*changeDetailProps={this.changeDetailProps}*/}
+        {/*/>*/}
         {this.switchType()}
       </div>
     );

@@ -75,11 +75,11 @@ const columns = [
     name: '下拉框',
     icon: 下拉框,
   },
-  {
-    type: 'selectMultiple',
-    name: '下拉复选框',
-    icon: 下拉复选框,
-  }
+  // {
+  //   type: 'selectMultiple',
+  //   name: '下拉复选框',
+  //   icon: 下拉复选框,
+  // }
 ];
 
 const plusColumns = [

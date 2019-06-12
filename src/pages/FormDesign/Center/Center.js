@@ -43,8 +43,8 @@ export default class CenterContent extends Component {
         value={value}
         nameSpan={
           {
-            big: 5,
-            small: 7,
+            big: 10,
+            small: 10,
           }
         }
         fileSpan={{big:formConfig.fileSpan, small: formConfig.fileSpan}}

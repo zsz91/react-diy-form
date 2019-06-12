@@ -33,7 +33,9 @@ export default class RightContent extends Component {
             nowField={nowField}
             changeNowField={changeNowField}/>
           </TabPane>
-          <TabPane
+
+          {/** 需求变更不使用表单属性 直接单列 */}
+          {/*<TabPane
             tab={'表单属性'}
             key="2"
             className={styles.tabOne}
@@ -43,7 +45,7 @@ export default class RightContent extends Component {
               changeFormArrange={(e)=>{this.props.changeFormConfig('fileSpan', e.target.value)}}
             />
 
-          </TabPane>
+          </TabPane>*/}
         </Tabs>
       );
   }

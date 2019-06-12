@@ -1,9 +1,14 @@
 import React, { Component, Fragment } from 'react';
-import { Select, Row, Input, Checkbox, Radio, InputNumber,DatePicker  } from 'antd';
+import {
+  Select, Row, Input, Checkbox,
+  Radio, InputNumber, DatePicker, message,
+  Icon,
+} from 'antd';
 import moment from 'moment';
 import styles from './right.less';
 
 const { TextArea } = Input;
+const CheckboxGroup = Checkbox.Group;
 
 
 const Title = ({ name }) => {
@@ -95,9 +100,9 @@ const DefaultValue = ({ value, changeDetailProps }) => {
  * */
 const DatePickerType = ({ value, changeValue }) => {
   const changeShowTime = (x) => {
-    if(x === '0'){
+    if (x === '0') {
       changeValue('showTime', false);
-    }else{
+    } else {
       changeValue('showTime', true);
     }
   };
@@ -143,7 +148,7 @@ const DefaultValueDatePicker = ({ value, changeDetailProps, showTime }) => {
   const datePickerOnchange = (dateString) => {
     changeDetailProps('defaultValue', dateString);
   };
-  let valueStr  = value;
+  let valueStr = value;
   if (typeof valueStr !== 'object') {
     if (valueStr) {
       valueStr = moment(valueStr);
@@ -241,14 +246,18 @@ const IsRequiredNumber = (
         </Checkbox>
       </Row>
       {nowField.detailProps.limit ?
-        <Row style={{padding: '10px'}}>
+        <Row style={{ padding: '10px' }}>
           <InputNumber
             value={nowField.detailProps.min}
-            onChange={(e) => {changeDetailProps('min', e)}}/>
+            onChange={(e) => {
+              changeDetailProps('min', e);
+            }}/>
           &nbsp; ~&nbsp;
           <InputNumber
             value={nowField.detailProps.max}
-            onChange={(e) => {changeDetailProps('max', e)}}
+            onChange={(e) => {
+              changeDetailProps('max', e);
+            }}
           />
         </Row>
         : null}
@@ -276,6 +285,14 @@ const IsEditable = ({ value, changeValue }) => {
 
 
 const EditName = ({ value, changeValue }) => {
+  const nameChange = (newValue) => {
+    if (newValue.length > 15) {
+      message.warning('标题不能超过15个字符');
+      return false;
+    } else {
+      changeValue('name', newValue);
+    }
+  };
   return (
     <ShellOutSide
       title={'标题'}
@@ -284,7 +301,7 @@ const EditName = ({ value, changeValue }) => {
         value={value}
         className={styles.width100}
         onChange={(e) => {
-          changeValue('name', e.target.value);
+          nameChange(e.target.value);
         }}
       />
     </ShellOutSide>);
@@ -326,17 +343,42 @@ const FormArrange = ({ value, changeFormArrange }) => {
     </ShellOutSide>);
 };
 
-const RadioGroupOpitionEdit = ({options, changeDetailProps, defaultValue, changeValue}) => {
+const RadioGroupOpitionEdit = ({ options, changeDetailProps, defaultValue, changeValue }) => {
   const radioStyle = {
     display: 'block',
     height: '30px',
     lineHeight: '30px',
   };
 
-  const optionsOnChange = (index,value) => {
-      const opt = options;
-      opt[index].name = value;
-      changeValue('options',opt);
+  const optionsOnChange = (index, value) => {
+    const opt = options;
+    opt[index].name = value;
+    changeValue('options', opt);
+  };
+
+  const optionsOnDelete = (e, index) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const opt = options;
+    if (opt.length === 1) {
+      message.warning('至少需要保留一个选项!');
+      return false;
+    }
+    opt.splice(index, 1);
+    changeValue('options', opt);
+  };
+
+  const optionsOnAdd = () => {
+    const opt = options;
+    let key = opt[opt.length - 1].key;
+    let newKey = parseInt(key, 10) + 1 + '';
+    opt.push(
+      {
+        key: newKey,
+        name: '选项',
+      },
+    );
+    changeValue('options', opt);
   };
 
   return (
@@ -344,7 +386,9 @@ const RadioGroupOpitionEdit = ({options, changeDetailProps, defaultValue, change
       title={'选项'}
     >
       <Radio.Group
-        onChange={(e)=>{changeDetailProps('defaultValue', e.target.value)}}
+        onChange={(e) => {
+          changeDetailProps('defaultValue', e.target.value);
+        }}
         value={defaultValue}>
         {
           options.map((item, indexA) => {
@@ -353,21 +397,139 @@ const RadioGroupOpitionEdit = ({options, changeDetailProps, defaultValue, change
                 style={radioStyle}
                 key={item.key}
                 value={item.key}>
-                <Input value={item.name}
-                       onChange={(e)=>{optionsOnChange(indexA,e.target.value)}}/>
+                <Fragment>
+                  <Input value={item.name}
+                         className={styles.optionsInput}
+                         onChange={(e) => {
+                           optionsOnChange(indexA, e.target.value);
+                         }}/>
+                  <Icon type="minus-circle"
+                        className={styles.optionsDelete}
+                        onClick={(e) => {
+                          optionsOnDelete(e, indexA);
+                        }}
+                    // theme={'filled'}
+                  />
+                </Fragment>
               </Radio>
-            )
+            );
           })
         }
       </Radio.Group>
+      <div className={styles.optionsAdd}
+           onClick={optionsOnAdd}
+      >
+        添加选项
+      </div>
     </ShellOutSide>);
 };
 
+const CheckboxGroupOpitionEdit = ({ options, changeDetailProps, defaultValue, changeValue }) => {
+  const radioStyle = {
+    display: 'block',
+    height: '30px',
+    lineHeight: '30px',
+  };
+
+  const optionsOnChange = (index, value) => {
+    const opt = options;
+    opt[index].label = value;
+    changeValue('options', opt);
+  };
+
+  const optionsOnDelete = (e, index) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const opt = options;
+    if (opt.length === 1) {
+      message.warning('至少需要保留一个选项!');
+      return false;
+    }
+    opt.splice(index, 1);
+    changeValue('options', opt);
+  };
+
+  const optionsOnAdd = () => {
+    const opt = options;
+    let value = opt[opt.length - 1].value;
+    let newKey = (parseInt(value, 10) + 1).toString();
+    opt.push(
+      {
+        value: newKey,
+        label: '选项',
+      },
+    );
+    changeValue('options', opt);
+  };
+
+
+  return (
+    <ShellOutSide
+      title={'选项'}
+    >
+      <CheckboxGroup
+        onChange={(value) => {
+          changeDetailProps('defaultValue', value);
+        }}
+        className={styles.disBlock}
+        value={defaultValue}
+        options={options.map((item, indexA) => {
+          return {
+            label: <Fragment>
+              <Input value={item.label}
+                     className={styles.optionsInput2}
+                     onChange={(e) => {
+                       optionsOnChange(indexA, e.target.value);
+                     }}/>
+              <Icon type="minus-circle"
+                    className={styles.optionsDelete}
+                    onClick={(e) => {
+                      optionsOnDelete(e, indexA);
+                    }}
+              />
+            </Fragment>,
+            value: item.value,
+          };
+        })}
+      >
+        {/* {
+          options.map((item, indexA) => {
+            return (
+              <Radio
+                style={radioStyle}
+                key={item.key}
+                value={item.key}>
+                <Fragment>
+                  <Input value={item.label}
+                         className={styles.optionsInput}
+                         onChange={(e) => {
+                           optionsOnChange(indexA, e.target.value);
+                         }}/>
+                  <Icon type="minus-circle"
+                        className={styles.optionsDelete}
+                        onClick={(e) => {
+                          optionsOnDelete(e, indexA);
+                        }}
+                    // theme={'filled'}
+                  />
+                </Fragment>
+              </Radio>
+            );
+          })
+        }*/}
+      </CheckboxGroup>
+      <div className={styles.optionsAdd}
+           onClick={optionsOnAdd}
+      >
+        添加选项
+      </div>
+    </ShellOutSide>);
+};
 
 export {
   Format, DefaultValue, IsRequired,
   IsEditable, EditName, EditDescribe,
-  DefaultValueNumber, IsRequiredNumber,FormArrange,
-  DefaultValueDatePicker,DatePickerType,
-  RadioGroupOpitionEdit,
+  DefaultValueNumber, IsRequiredNumber, FormArrange,
+  DefaultValueDatePicker, DatePickerType,
+  RadioGroupOpitionEdit, CheckboxGroupOpitionEdit,
 };

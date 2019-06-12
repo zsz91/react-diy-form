@@ -37,3 +37,77 @@
     }
   }
 }
+
+.ButtonDiy{
+  @blue: rgba(25,152,240,1);
+  @white: rgba(255,255,255,1);
+  @red: #F14B5A;
+  padding-right: 12px;
+  button{
+    height:30px;
+  }
+  .primaryBlue{
+    font-size:14px;
+    font-weight:400;
+    color:@white;
+    height:30px;
+    background:@blue;
+    border-radius:2px;
+    border-color:@blue;
+    &:hover,&:active,&:focus{
+      background:@blue;
+      color:@white;
+      border-color:@white;
+    }
+
+    &:disabled {
+      color: rgba(0, 0, 0, 0.25);
+      background-color: #f5f5f5;
+      border-color: #d9d9d9;
+    }
+  }
+  .primaryRed{
+    font-size:14px;
+    font-weight:400;
+    color:@white;
+    height:30px;
+    background:@red;
+    border-radius:2px;
+    border-color:@red;
+    &:hover,&:active,&:focus{
+      background:@red;
+      color:@white;
+      border-color:@white;
+    }
+  }
+  .defaultBlue{
+    font-size:14px;
+    font-weight:400;
+    color:@blue;
+    height:30px;
+    background:@white;
+    border-radius:2px;
+    border-color:@blue;
+    &:hover,&:active,&:focus{
+      background:@white;
+      color:@blue;
+      border-color:@blue;
+    }
+  }
+  .defaultRed{
+    font-size:14px;
+    font-weight:400;
+    color:@red;
+    height:30px;
+    background:@white;
+    border-radius:2px;
+    border-color:@red;
+    &:hover,&:active,&:focus{
+      background:@white;
+      color:@red;
+      border-color:@red;
+    }
+  }
+
+}
+

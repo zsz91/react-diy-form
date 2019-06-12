@@ -1,13 +1,13 @@
 .right{
-  border-left: solid 1px #e0e0e0;
   height: 100%;
+  border-left: solid 1px #e0e0e0;
   :global{
     .ant-tabs-tab{
       width: 50%;
     }
   }
   .tabOne{
-    width: 50%;
+    width: 100%;
   }
 }
 
@@ -15,15 +15,43 @@
 .title{
   font-weight: 700;
   padding-left: 12px;
-  font-size: 14px;
   padding-top: 15px;
+  font-size: 14px;
 }
 .width80{
   width: 100%;
-  padding-left: 12px;
   padding-right: 12px;
+  padding-left: 12px;
 }
 
 .width100{
   width: 100%;
+}
+.optionsInput{
+  width: 80%;
+}
+.optionsInput2{
+  width: 70%;
+}
+.optionsDelete{
+  padding-left: 10px;
+  color: #d84636;
+  font-size: 20px;
+}
+
+.optionsAdd{
+  padding-top: 5px;
+  color: #0DB3A6;
+  text-align: center;
+  cursor: pointer;
+}
+
+.disBlock{
+  :global{
+    .ant-checkbox-group-item{
+      display: block;
+      margin-top: 5px;
+      margin-right: 0px;
+    }
+  }
 }
